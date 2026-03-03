@@ -1,7 +1,3 @@
-Hai ragione, per un progetto internazionale il README deve essere perfettamente bilanciato. Ho riscritto le sezioni in modo che ogni singola parte (inclusi i requisiti e i tech stack) sia disponibile in entrambe le lingue, mantenendo una struttura a specchio.
-
-Ecco il file `README.md` completo e corretto:
-
 ```markdown
 # 📻 Navidrome Radio Manager (V6.1)
 
