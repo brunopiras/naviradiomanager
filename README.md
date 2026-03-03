@@ -89,6 +89,11 @@ services:
     network_mode: bridge
     ports:
       - "8501:8501"
+    ###If you want try yourself to add or modify features, copy the 2 .py files and mount
+    ###where you want, remember after each mod restart the container
+    #volumes:
+    #  - /path/to/radio_web.py:/app/radio_web.py #Optional to developers
+    #  - /path/to/lang.py:/app/lang.py #Optional to developers
     environment:
       - APP_LANG=IT # IT or EN
       - NAVIDROME_URL=http://YOUR_IP:4533
