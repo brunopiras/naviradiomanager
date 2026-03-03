@@ -79,3 +79,6 @@ docker-compose up -d --build
 * **i18n**: Custom dictionary-based localization (`lang.py`)
 
 ```
+* **IMAGE**: If you want, use the docker-compose and pre-built image
+     (docker pull ghcr.io/brunopiras/naviradiomanager:latest)
+```
