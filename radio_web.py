@@ -15,7 +15,7 @@ TOKEN = hashlib.md5((PASSWORD + SALT).encode("utf-8")).hexdigest()
 LANG_CODE = os.getenv("APP_LANG", "IT").upper()
 T = TRANSLATIONS.get(LANG_CODE, TRANSLATIONS["IT"])
 
-VERSION = f"V6.1-{LANG_CODE}"
+VERSION = f"V6.1.6-{LANG_CODE}"
 FLAGS = {"IT": "🇮🇹", "US": "🇺🇸", "GB": "🇬🇧", "FR": "🇫🇷", "DE": "🇩🇪", "ES": "🇪🇸", "CH": "🇨🇭"}
 
 # --- FUNZIONI DI SUPPORTO ---
@@ -97,10 +97,12 @@ def reset_home():
     st.session_state.search_country_sel = ""
 
 # --- INTERFACCIA ---
-st.set_page_config(page_title=T["title"], page_icon="📻", layout="centered")
+st.set_page_config(page_title="NaviRadioManager", page_icon="📻", layout="centered")
 st.markdown("<style>[data-testid='stVerticalBlock'] > div {transition: none !important; opacity: 1 !important;}</style>", unsafe_allow_html=True)
 
 st.title(T["title"])
+
+
 
 lista_ufficiale = [""] + get_all_countries()
 
@@ -172,6 +174,7 @@ with main_area.container():
         else:
             st.warning(T["no_results"])
             st.button(T["btn_home"], on_click=reset_home)
-
 st.divider()
-st.caption(f"Ver.: {VERSION} | Server: {NAVIDROME_URL} | Navidrome User: {USERNAME}")
+st.caption(f"Server: {NAVIDROME_URL} | Navidrome User: {USERNAME}")
+st.divider()
+st.caption(f"Ver.: {VERSION} - Github Repo: https://github.com/brunopiras/naviradiomanager")
