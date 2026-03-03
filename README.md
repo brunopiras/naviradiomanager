@@ -1,8 +1,7 @@
-```markdown
 # 📻 Navidrome Radio Manager (V6.1)
 
-
-
+---
+#### This tool uses the APIs of https://api.radio-browser.info to search for radio stations. (Thanks! ✨)
 ---
 
 ## 🇮🇹 Descrizione (Italiano)
@@ -77,15 +76,41 @@ docker-compose up -d --build
 * **APIs**: Radio-Browser API & Subsonic API (Navidrome)
 * **Container**: Docker (Python 3.11-slim)
 * **i18n**: Custom dictionary-based localization (`lang.py`)
+* **Browser**: Streamlit sometimes has problems with the Safari browser. Try using Chrome to check if everything works.
+
+---
+
+## 🛠️ Portainer Stack
 
 ```
-* **IMAGE**: If you want, use the docker-compose and pre-built image
-     (docker pull ghcr.io/brunopiras/naviradiomanager:latest)
+services:
+  radio-manager:
+    image: ghcr.io/brunopiras/naviradiomanager:latest
+    network_mode: bridge
+    ports:
+      - "8501:8501"
+    environment:
+      - APP_LANG=IT # IT or EN
+      - NAVIDROME_URL=http://YOUR_IP:4533
+      - NAVIDROME_USER=your_user
+      - NAVIDROME_PASS=your_password
+      - NAVIDROME_SALT=sfggdsfgegefgefghss
+      - STREAMLIT_SERVER_ENABLE_CORS=false
+      - STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=false
+      - STREAMLIT_SERVER_COOKIE_SECRET=hjdgakasjkdasljdkekjekekjjssjss
+      - STREAMLIT_SERVER_ADDRESS=YOUR_IP
+      - STREAMLIT_GLOBAL_DATA_FRAME_SERIALIZATION=legacy
+    restart: unless-stopped
 ```
-### Thanks to @WB2024 (https://github.com/WB2024/Add-Navidrome-Radios)
-```
+#### Go to http://YOUR_IP:8501 
+
+
+---
+
+##### Thanks to @WB2024 (https://github.com/WB2024/Add-Navidrome-Radios)
+
 This idea came to me while using @WB2024's tool (which essentially works in CLI) 
 the difference that his tool interacts with the Navidrome database, 
 while I use the Subsonic API, the web interface is simple, fast, and intuitive!
-```
+
 
