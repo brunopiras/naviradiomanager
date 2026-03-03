@@ -6,7 +6,8 @@
 ---
 
 ## 🇮🇹 Descrizione (Italiano)
-**Navidrome Radio Manager** è una web-app leggera basata su Streamlit per gestire le stazioni radio del tuo server **Navidrome**. Cerca tra migliaia di stazioni globali e aggiungile con un clic, evitando i duplicati.
+**Navidrome Radio Manager** è una web-app leggera basata su Streamlit per gestire le stazioni radio
+del tuo server **Navidrome**. Cerca tra migliaia di stazioni globali e aggiungile con un clic, evitando i duplicati.
 
 ### ✨ Caratteristiche
 * **Ricerca Ibrida**: Cerca per nome o seleziona una nazione dalla lista ufficiale.
@@ -17,7 +18,8 @@
 ---
 
 ## 🇬🇧 Description (English)
-**Navidrome Radio Manager** is a lightweight Streamlit-based web app to manage your **Navidrome** radio stations. Browse thousands of global stations and add them instantly while avoiding duplicates.
+**Navidrome Radio Manager** is a lightweight Streamlit-based web app to manage your **Navidrome** radio stations.
+Browse thousands of global stations and add them instantly while avoiding duplicates.
 
 ### ✨ Features
 * **Hybrid Search**: Search by name or pick a country from the official list.
