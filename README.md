@@ -112,10 +112,10 @@ services:
 
 ---
 
-##### Thanks to @WB2024 (https://github.com/WB2024/Add-Navidrome-Radios)
+###### Thanks to @WB2024 (https://github.com/WB2024/Add-Navidrome-Radios)
 
-This idea came to me while using @WB2024's tool (which essentially works in CLI) 
-the difference that his tool interacts with the Navidrome database, 
-while I use the Subsonic API, the web interface is simple, fast, and intuitive!
+###### This idea came to me while using @WB2024's tool (which essentially works in CLI) 
+###### the difference that his tool interacts with the Navidrome database, 
+###### while I use the Subsonic API, the web interface is simple, fast, and intuitive!
 
 
