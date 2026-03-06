@@ -1,4 +1,4 @@
-# 📻 Navidrome Radio Manager (V6.1)
+# 📻 Navidrome Radio Manager (V6.1.8)
 
 ---
 #### This tool uses the APIs of https://api.radio-browser.info to search for radio stations. (Thanks! ✨)
@@ -50,11 +50,6 @@ services:
       - NAVIDROME_USER=your_user
       - NAVIDROME_PASS=your_password
       - NAVIDROME_SALT=sfggdsfgegefgefghss
-      - STREAMLIT_SERVER_ENABLE_CORS=false
-      - STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=false
-      - STREAMLIT_SERVER_COOKIE_SECRET=hjdgakasjkdasljdkekjekekjjssjss
-      - STREAMLIT_SERVER_ADDRESS=YOUR_IP
-      - STREAMLIT_GLOBAL_DATA_FRAME_SERIALIZATION=legacy
     restart: unless-stopped
 
 ```
@@ -80,12 +75,13 @@ docker-compose up -d --build
 
 ---
 
-## 🛠️ Portainer Stack
+## 🛠️ Portainer Stack (Suggested)
 
 ```
 services:
   radio-manager:
     image: ghcr.io/brunopiras/naviradiomanager:latest
+    container_name: radio-manager
     network_mode: bridge
     ports:
       - "8501:8501"
@@ -100,11 +96,6 @@ services:
       - NAVIDROME_USER=your_user
       - NAVIDROME_PASS=your_password
       - NAVIDROME_SALT=sfggdsfgegefgefghss
-      - STREAMLIT_SERVER_ENABLE_CORS=false
-      - STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=false
-      - STREAMLIT_SERVER_COOKIE_SECRET=hjdgakasjkdasljdkekjekekjjssjss
-      - STREAMLIT_SERVER_ADDRESS=YOUR_IP
-      - STREAMLIT_GLOBAL_DATA_FRAME_SERIALIZATION=legacy
     restart: unless-stopped
 ```
 #### Go to http://YOUR_IP:8501 
