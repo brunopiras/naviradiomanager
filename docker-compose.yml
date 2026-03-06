@@ -10,11 +10,6 @@ services:
       - NAVIDROME_USER=YOUR_USER
       - NAVIDROME_PASS=YOUR_PASS
       - NAVIDROME_SALT=sasjhghaghjsgahjgsa
-      - STREAMLIT_SERVER_ENABLE_CORS=false
-      - STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=false
-      - STREAMLIT_SERVER_COOKIE_SECRET=usghajkshkdshkfhskhfkd
-      - STREAMLIT_SERVER_ADDRESS=YOUR_IP
-      - STREAMLIT_GLOBAL_DATA_FRAME_SERIALIZATION=legacy
     #volumes:
     #  - /path/to/radio_web.py:/app/radio_web.py #Optional to developers
     #  - /path/to/lang.py:/app/lang.py #Optional to developers
