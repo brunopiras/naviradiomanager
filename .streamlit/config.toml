@@ -1,0 +1,31 @@
+[global]
+disableWidgetStateDuplicationWarning = false
+showWarningOnDirectExecution = true
+
+[client]
+showErrorDetails = "none"
+toolbarMode = "auto"
+
+[server]
+runOnSave = true
+address = "0.0.0.0"
+port = "8501"
+
+[theme]
+# Colore principale per pulsanti e accenti (un rosso vivo)
+primaryColor = "#cc0000"
+
+# --- IL TUO NUOVO VERDONE PETROLIO ---
+backgroundColor = "#073b4c"
+
+# Base chiara per la sidebar (sfondo per la bandiera)
+secondaryBackgroundColor = "#f0f0f0"
+
+# Testo chiaro per lo sfondo scuro
+textColor = "#fafafa"
+
+font = "sans-serif"
+
+[logger]
+level = "info"
+messageFormat = "%(asctime)s %(message)s"
