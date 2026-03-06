@@ -1,46 +1,36 @@
+---
+
 # 📻 Navidrome Radio Manager (V6.1.8)
 
 ---
-#### This tool uses the APIs of https://api.radio-browser.info to search for radio stations. (Thanks! ✨)
+
+#### This tool uses the APIs of [https://api.radio-browser.info](https://api.radio-browser.info) to search for radio stations. (Thanks! ✨)
+
 ---
 
 ## 🇮🇹 Descrizione (Italiano)
-**Navidrome Radio Manager** è una web-app leggera basata su Streamlit per gestire le stazioni radio
-del tuo server **Navidrome**. Cerca tra migliaia di stazioni globali e aggiungile con un clic, evitando i duplicati.
 
-### ✨ Caratteristiche
-* **Ricerca Ibrida**: Cerca per nome o seleziona una nazione dalla lista ufficiale.
-* **Controllo Duplicati**: L'app interroga Navidrome e ti avvisa (con l'icona ✅) se una radio è già presente.
-* **Internazionale**: Supporto per Italiano e Inglese tramite variabili d'ambiente.
-* **Affidabilità**: Utilizza il sistema di mirror `all.api` per una ricerca sempre attiva.
-
----
+**Navidrome Radio Manager** è una web-app leggera basata su Streamlit per gestire le stazioni radio del tuo server **Navidrome**. Cerca tra migliaia di stazioni globali e aggiungile con un clic, evitando i duplicati grazie all'integrazione con le API Subsonic.
 
 ## 🇬🇧 Description (English)
-**Navidrome Radio Manager** is a lightweight Streamlit-based web app to manage your **Navidrome** radio stations.
-Browse thousands of global stations and add them instantly while avoiding duplicates.
 
-### ✨ Features
-* **Hybrid Search**: Search by name or pick a country from the official list.
-* **Duplicate Check**: Real-time query to Navidrome to flag stations already in your database (✅ icon).
-* **International**: Built-in Italian and English support via environment variables.
-* **Reliability**: Uses the `all.api` mirror system for maximum availability.
+**Navidrome Radio Manager** is a lightweight Streamlit-based web app to manage your **Navidrome** radio stations. Browse thousands of global stations and add them instantly while avoiding duplicates using Subsonic APIs.
 
 ---
 
 ## 🚀 Installazione / Installation
 
-### 1. Requisiti / Requirements
-* 🇮🇹 Navidrome attivo e Docker installato.
-* 🇬🇧 Active Navidrome instance and Docker installed.
+Scegli il metodo più adatto alle tue esigenze:
 
-### 2. Docker Compose
-🇮🇹 Crea un file `docker-compose.yml` / 🇬🇧 Create a `docker-compose.yml` file:
+### Opzione A: Immagine Pronta (Consigliato / Recommended)
+
+🇮🇹 Usa l'immagine pre-compilata da GitHub Container Registry. Ideale per chi vuole solo usare l'app.
+🇬🇧 Use the pre-built image from GHCR. Perfect for users who just want to run the app.
 
 ```yaml
 services:
   radio-manager:
-    build: .
+    image: ghcr.io/brunopiras/naviradiomanager:latest
     container_name: radio-manager
     ports:
       - "8501:8501"
@@ -49,64 +39,44 @@ services:
       - NAVIDROME_URL=http://YOUR_IP:4533
       - NAVIDROME_USER=your_user
       - NAVIDROME_PASS=your_password
-      - NAVIDROME_SALT=sfggdsfgegefgefghss
+      - NAVIDROME_SALT=your_salt_here
     restart: unless-stopped
 
 ```
 
-### 3. Avvio / Startup
+### Opzione B: Build Locale (Sviluppatori / Developers)
 
-🇮🇹 Costruisci e avvia il container / 🇬🇧 Build and run the container:
+🇮🇹 Clona il repository e costruisci l'immagine localmente. Utile per personalizzare il codice.
+🇬🇧 Clone the repo and build the image locally. Best for customization.
 
 ```bash
+git clone https://github.com/brunopiras/naviradiomanager.git
+cd naviradiomanager
 docker-compose up -d --build
 
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack & Features
 
-* **UI**: Streamlit (Python)
+* **UI**: Streamlit (Python) - *Look for the Italian Flag sidebar!* 🇮🇹
 * **APIs**: Radio-Browser API & Subsonic API (Navidrome)
-* **Container**: Docker (Python 3.11-slim)
-* **i18n**: Custom dictionary-based localization (`lang.py`)
-* **Browser**: Streamlit sometimes has problems with the Safari browser. Try using Chrome to check if everything works.
+* **Container**: Docker (python:3.14-slim-trixie)
+* **Duplicate Check**: Real-time query (✅ icon if already in Navidrome).
+* **Reliability**: Uses the `all.api` mirror system.
 
 ---
 
-## 🛠️ Portainer Stack (Suggested)
+## 📝 Note / Notes
 
-```
-services:
-  radio-manager:
-    image: ghcr.io/brunopiras/naviradiomanager:latest
-    container_name: radio-manager
-    network_mode: bridge
-    ports:
-      - "8501:8501"
-    ###If you want try yourself to add or modify features, copy the 2 .py files and mount
-    ###where you want, remember after each mod restart the container
-    #volumes:
-    #  - /path/to/radio_web.py:/app/radio_web.py #Optional to developers
-    #  - /path/to/lang.py:/app/lang.py #Optional to developers
-    environment:
-      - APP_LANG=IT # IT or EN
-      - NAVIDROME_URL=http://YOUR_IP:4533
-      - NAVIDROME_USER=your_user
-      - NAVIDROME_PASS=your_password
-      - NAVIDROME_SALT=sfggdsfgegefgefghss
-    restart: unless-stopped
-```
-#### Go to http://YOUR_IP:8501 
-
+* **Safari Users**: ⚠️ Streamlit sometimes has problems with Safari. If you experience UI glitches, please try **Chrome** or **Firefox**.
+* **Customization**: Developers can mount volumes to modify `radio_web.py` or `lang.py` without rebuilding (see the Portainer Stack section).
 
 ---
 
-###### Thanks to @WB2024 (https://github.com/WB2024/Add-Navidrome-Radios)
+###### Special thanks to @WB2024 ([https://github.com/WB2024/Add-Navidrome-Radios](https://github.com/WB2024/Add-Navidrome-Radios))
 
-###### This idea came to me while using @WB2024's tool (which essentially works in CLI) 
-###### the difference that his tool interacts with the Navidrome database, 
-###### while I use the Subsonic API, the web interface is simple, fast, and intuitive!
+###### This idea came to me while using @WB2024's tool. While his tool interacts directly with the database via CLI, Navidrome Radio Manager uses the **Subsonic API** for a simple, fast, and intuitive web interface!
 
-
+---
