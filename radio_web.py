@@ -1,3 +1,4 @@
+####
 import streamlit as st
 import requests
 import hashlib
@@ -5,6 +6,41 @@ import os
 import time
 from lang import TRANSLATIONS
 
+
+
+# --- STUPISCIMI: CSS PER BANDIERA ITALIANA NELLA SIDEBAR ---
+st.markdown("""
+    <style>
+        /* Seleziona il contenitore principale della sidebar */
+        [data-testid="stSidebar"] > div:first-child {
+            background: linear-gradient(
+                to bottom,
+                #008c45 0%, #008c45 33.33%,    /* VERDE UFFICIALE 1/3 */
+                #f4f5f0 33.33%, #f4f5f0 66.66%, /* BIANCO UFFICIALE 1/3 */
+                #cd212a 66.66%, #cd212a 100%   /* ROSSO UFFICIALE 1/3 */
+            ) !important;
+            background-attachment: fixed; /* Mantiene le strisce ferme allo scorrimento */
+        }
+
+        /* --- OTTIMIZZAZIONE TESTO SIDEBAR --- */
+        /* Rende il testo nella sidebar scuro e leggibile su verde/bianco */
+        [data-testid="stSidebar"] .stMarkdown, 
+        [data-testid="stSidebar"] label,
+        [data-testid="stSidebar"] .stSelectbox label,
+        [data-testid="stSidebar"] .stTextInput label {
+            color: #1a1a1a !important; 
+            font-weight: 500;
+        }
+        
+        /* Assicura che i widget (input, select) siano ben visibili */
+        [data-testid="stSidebar"] div[data-baseweb="select"] > div,
+        [data-testid="stSidebar"] div[data-baseweb="base-input"] > input {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            color: #1a1a1a !important;
+            border-radius: 4px;
+        }
+    </style>
+""", unsafe_allow_html=True)
 # --- CONFIGURAZIONE (ENV) ---
 NAVIDROME_URL = os.getenv("NAVIDROME_URL", "")
 USERNAME = os.getenv("NAVIDROME_USER", "")
@@ -15,7 +51,7 @@ TOKEN = hashlib.md5((PASSWORD + SALT).encode("utf-8")).hexdigest()
 LANG_CODE = os.getenv("APP_LANG", "IT").upper()
 T = TRANSLATIONS.get(LANG_CODE, TRANSLATIONS["IT"])
 
-VERSION = f"V6.1.6-{LANG_CODE}"
+VERSION = f"V6.1.8-{LANG_CODE}"
 FLAGS = {"IT": "🇮🇹", "US": "🇺🇸", "GB": "🇬🇧", "FR": "🇫🇷", "DE": "🇩🇪", "ES": "🇪🇸", "CH": "🇨🇭"}
 
 # --- FUNZIONI DI SUPPORTO ---
@@ -89,12 +125,16 @@ def trigger_search():
     st.session_state.results = search_radio(name, st.session_state.final_country, 0)
 
 def reset_home():
+    # 1. Reset degli stati logici
     st.session_state.stage = 0
     st.session_state.results = []
     st.session_state.offset = 0
-    st.session_state.search_name = ""
-    st.session_state.search_country_text = ""
-    st.session_state.search_country_sel = ""
+    st.session_state["search_name"] = ""
+    st.session_state["search_country_text"] = ""
+    st.session_state["search_country_sel"] = ""
+
+def rerun():
+    st.write("")
 
 # --- INTERFACCIA ---
 st.set_page_config(page_title="NaviRadioManager", page_icon="📻", layout="centered")
@@ -133,7 +173,7 @@ with main_area.container():
         existing_urls = get_existing_radios()
         
         if st.session_state.results:
-            st.button(f"⬅️ {T['btn_home']}", on_click=reset_home)
+            st.button(f"⬅️ {T['btn_home']}", on_click=reset_home, use_container_width=True)
             st.write(f"### {T['results']}")
             
             for s in st.session_state.results:
@@ -175,6 +215,16 @@ with main_area.container():
             st.warning(T["no_results"])
             st.button(T["btn_home"], on_click=reset_home)
 st.divider()
-st.caption(f"Server: {NAVIDROME_URL} | Navidrome User: {USERNAME}")
+col1, col2 = st.columns([1, 1])
+with col1:
+    st.markdown(f":gray-badge[:material/check: Navidrome URL: {NAVIDROME_URL} ]")
+with col2:
+    st.markdown(f":gray-badge[:material/check: User: {USERNAME} ]")
 st.divider()
-st.caption(f"Ver.: {VERSION} - Github Repo: https://github.com/brunopiras/naviradiomanager")
+col1, col2, col3= st.columns([1, 1, 1])
+with col1:
+    st.markdown(f":violet-badge[:material/star: {VERSION}]")
+with col2:
+    st.markdown("[![GitHub](https://img.shields.io/badge/GitHub-Repo-orange?logo=github)](https://github.com/brunopiras/naviradiomanager)")
+with col3:
+    st.markdown("[![Reddit](https://img.shields.io/badge/Reddit-Discuss-orange?logo=reddit&logoColor=white)](https://www.reddit.com/r/navidrome/comments/1rjntju/search_and_add_stream_radio_from_webapp/)")
