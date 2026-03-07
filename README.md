@@ -1,6 +1,6 @@
 ---
 
-# 📻 Navidrome Radio Manager (V6.1.9-RC8)
+# 📻 Navidrome Radio Manager (V6.1.9-RC11)
 
 ---
 
@@ -69,7 +69,7 @@ docker-compose up -d --build
 * **✅ Duplicate Check**: Real-time Subsonic query (shows a checkmark if the station is already in your DB).
 * **🔄 Reliability**: Uses the `all.api` mirror system with automatic fallback.
 * **📈 Stats Badge**: Real-time counter showing the total number of radios stored in your Navidrome DB.
-
+* **🔥 Add Button Radio Vote**: Button to vote stations.
 
 ### 🎨 Quality Indicators
 - 🟢 **High Quality**: >192 kbps (Audiophile choice)
