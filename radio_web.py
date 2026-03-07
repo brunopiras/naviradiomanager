@@ -29,12 +29,51 @@ st.markdown("""
             font-weight: 500;
         }
         
-        /* Assicura che i widget (input, select) siano ben visibili */
+        * Assicura che i widget (input, select) siano ben visibili */
         [data-testid="stSidebar"] div[data-baseweb="select"] > div,
         [data-testid="stSidebar"] div[data-baseweb="base-input"] > input {
             background-color: rgba(255, 255, 255, 0.9) !important;
             color: #1a1a1a !important;
             border-radius: 4px;
+        }
+
+        /* Rende le icone delle radio smussate e aggiunge un'ombra leggera */
+        img {
+            border-radius: 8px !important; 
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.3); 
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1); /* Un sottile bordo per farle staccare dallo sfondo petrolio */
+        }
+
+        /* Effetto zoom al passaggio del mouse */
+        img:hover {
+            transform: scale(1.2);
+            box-shadow: 0px 6px 12px rgba(0,0,0,0.5);
+        }
+        /* Mini Player Trasparente */
+        audio {
+            width: 100%;
+            height: 40px;
+            opacity: 0.5; 
+            filter: invert(100%) hue-rotate(180deg) brightness(1.5); 
+            transition: opacity 0.3s;
+        }
+        audio:hover {
+            opacity: 1;
+        }
+        .top-voted {
+            background-color: #FFD700;
+            color: black;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 12px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
     </style>
 """, unsafe_allow_html=True)
@@ -48,7 +87,7 @@ TOKEN = hashlib.md5((PASSWORD + SALT).encode("utf-8")).hexdigest()
 LANG_CODE = os.getenv("APP_LANG", "IT").upper()
 T = TRANSLATIONS.get(LANG_CODE, TRANSLATIONS["IT"])
 
-VERSION = f"V6.1.9.RC5-{LANG_CODE}"
+VERSION = f"V6.1.9.RC8-{LANG_CODE}"
 FLAGS = {"IT": "🇮🇹", "US": "🇺🇸", "GB": "🇬🇧", "FR": "🇫🇷", "DE": "🇩🇪", "ES": "🇪🇸", "CH": "🇨🇭"}
 
 # --- FUNZIONI DI SUPPORTO ---
@@ -202,20 +241,55 @@ with main_area.container():
                 stream_url = s['url_resolved']
                 is_duplicate = stream_url in existing_urls
                 flag = FLAGS.get(s.get('countrycode', '').upper(), "🌐")
-                
+                # --- LOGICA TITOLO ---
+                votes = s.get('votes', 0)
+
+                # Se è una TOP radio, mettiamo il badge arancione, altrimenti solo il numero di stelle
+                if votes > 1000:
+                    top_tag = f" :orange[🔥 TOP {votes}]"
+                else:
+                    top_tag = f" ⭐ {votes}"
+
+                is_dup_tag = " ✅" if is_duplicate else ""
                 # Aggiungiamo un check se è duplicata nel titolo
-                titolo = f"{flag} **{s['name']}**" + (" ✅" if is_duplicate else "")
-                
-                with st.expander(f"{titolo} | ⭐ {s.get('votes', 0)}"):
+                titolo = f"{flag} **{s['name']}**{top_tag}{is_dup_tag}"             
+                with st.expander(f"{titolo}"):
+                    if votes > 1000:
+                        st.markdown(f"<span class='top-voted'>🔥 TOP {votes} VOTES</span>", unsafe_allow_html=True)
+                    
                     col1, col2 = st.columns([2, 1])
                     with col1:
-                        st.write(f"Bitrate: {s.get('bitrate', 0)} | Codec: {s.get('codec', 'N/D')}")
+                        # Recuperiamo il bitrate
+                        bitrate = s.get('bitrate', 0)
+                        codec = s.get('codec', 'N/D')
+                        
+                        # Determiniamo colore e etichetta in base alla qualità
+                        if bitrate >= 192:
+                            q_color = "green"
+                            q_label = "High Quality" if LANG_CODE == "EN" else "Alta Qualità"
+                        elif bitrate >= 128:
+                            q_color = "blue"
+                            q_label = "Standard Quality" if LANG_CODE == "EN" else "Qualità Standard"
+                        else:
+                            q_color = "orange"
+                            q_label = "Low Quality" if LANG_CODE == "EN" else "Bassa Qualità"
+
+                        st.write(f"Bitrate: {bitrate} | Codec: {codec}")
+                        
+                        # Inseriamo la barra di progresso (max 320 kbps)
+                        # Usiamo la sintassi colorata per l'etichetta
+                        st.markdown(f":{q_color}[{q_label}]")
+                        st.progress(min(bitrate / 320, 1.0))
+                        
                     with col2:
                         hp = s.get('homepage', '').strip()
                         if hp:
-                            st.image(f"https://www.google.com/s2/favicons?sz=64&domain={hp}", width=24)
-                    
+                            st.image(f"https://www.google.com/s2/favicons?sz=64&domain={hp}", width=24)        
                     st.divider()
+                    ###TEST MINI PLAYER 
+                    st.write("🎧 **Quick Preview:**")
+                    st.audio(stream_url, format="audio/mp3")
+
                     st.code(stream_url, language=None)
                     
                     if is_duplicate:
