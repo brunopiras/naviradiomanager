@@ -1,6 +1,6 @@
 ---
 
-# 📻 Navidrome Radio Manager (V6.1.8)
+# 📻 Navidrome Radio Manager (V6.1.9-RC5)
 
 ---
 
@@ -65,12 +65,12 @@ docker-compose up -d --build
 * **Container**: Docker (python:3.14-slim-trixie)
 * **Duplicate Check**: Real-time query (✅ icon if already in Navidrome).
 * **Reliability**: Uses the `all.api` mirror system.
-
+* **Badge with total radios stored in the db**
 ---
 
 ## 📝 Note / Notes
 
-* **Safari Users**: ⚠️ Streamlit sometimes has problems with Safari. If you experience UI glitches, please try **Chrome** or **Firefox**.
+* **Safari Users**: ⚠️ Streamlit sometimes has problems with Safari (V6.1.9-RC5 should fix it). If you experience UI glitches, please try **Chrome** or **Firefox**.
 * **Customization**: Developers can mount volumes to modify `radio_web.py` or `lang.py` without rebuilding (see the Portainer Stack section).
 
 ---
