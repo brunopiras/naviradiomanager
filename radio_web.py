@@ -87,7 +87,7 @@ TOKEN = hashlib.md5((PASSWORD + SALT).encode("utf-8")).hexdigest()
 LANG_CODE = os.getenv("APP_LANG", "IT").upper()
 T = TRANSLATIONS.get(LANG_CODE, TRANSLATIONS["IT"])
 
-VERSION = f"V6.1.9.RC8-{LANG_CODE}"
+VERSION = f"V6.1.9.RC11-{LANG_CODE}"
 FLAGS = {"IT": "🇮🇹", "US": "🇺🇸", "GB": "🇬🇧", "FR": "🇫🇷", "DE": "🇩🇪", "ES": "🇪🇸", "CH": "🇨🇭"}
 
 # --- FUNZIONI DI SUPPORTO ---
@@ -149,6 +149,14 @@ def add_to_navidrome(station):
         return r.json()
     except:
         return {"subsonic-response": {"status": "failed"}}
+def vote_for_station(uuid):
+    try:
+        # Usiamo uno dei mirror della API
+        url = f"https://all.api.radio-browser.info/json/vote/{uuid}"
+        response = requests.get(url)
+        return response.ok
+    except:
+        return False
 def get_total_radios():
     """Recupera il numero totale di stazioni radio configurate su Navidrome"""
     # Usiamo le variabili globali già definite all'inizio del file
@@ -284,24 +292,60 @@ with main_area.container():
                     with col2:
                         hp = s.get('homepage', '').strip()
                         if hp:
-                            st.image(f"https://www.google.com/s2/favicons?sz=64&domain={hp}", width=24)        
+                            st.image(f"https://www.google.com/s2/favicons?sz=64&domain={hp}", width=24)
                     st.divider()
                     ###TEST MINI PLAYER 
                     st.write("🎧 **Quick Preview:**")
                     st.audio(stream_url, format="audio/mp3")
-
                     st.code(stream_url, language=None)
+                    # --- AZIONI (Voto e Aggiunta) ---
+                    st.divider()
                     
+                    # CSS per forzare l'altezza del bottone uguale a quella dell'info box
+                    st.markdown("""
+                        <style>
+                            div.stButton > button {
+                                height: 52px !important;
+                                margin-top: 0px !important;
+                            }
+                        </style>
+                    """, unsafe_allow_html=True)
+
+                    col_v, col_a = st.columns([1, 1])
+                    
+                    with col_v:
+                        # Testo del bottone dinamico (es: "👍 Vota" o "👍 Vote")
+                        v_label = "👍 " + ("Vota Radio" if LANG_CODE == "IT" else "Vote Radio")
+                        
+                        if st.button(v_label, key=f"vote_{s['stationuuid']}", use_container_width=True):
+                            if vote_for_station(s['stationuuid']):
+                                # Messaggio toast in doppia lingua
+                                msg = "Voto inviato! Grazie! 🎉" if LANG_CODE == "IT" else "Vote sent! Thanks! 🎉"
+                                st.toast(msg)
+                            else:
+                                # Errore in doppia lingua
+                                err = "Errore nel voto" if LANG_CODE == "IT" else "Voting error"
+                                st.error(err)
+
+                    with col_a:
+                        if is_duplicate:
+                            # Il box info ha un'altezza di circa 52px
+                            st.info("✅ " + ("In Libreria" if LANG_CODE=="IT" else "In Library"))
+                        else:
+                            # Tasto Aggiungi (alto come il box info)
+                            if st.button(T["add_btn"], key=f"add_{s['stationuuid']}", use_container_width=True, type="primary"):
+                                res = add_to_navidrome(s)
+                                if res.get('subsonic-response', {}).get('status') == 'ok': 
+                                    st.success(T["success"])
+                                    time.sleep(1)
+                                    st.rerun() 
+                                else: 
+                                    st.error("Error adding station")
+
+                    # Avviso extra rimosso o spostato per pulizia
                     if is_duplicate:
-                        st.warning("⚠️ " + ( "Radio già presente in NAVIDROME" if LANG_CODE=="IT" else "Radio already exists in NAVIDROME" ))
-                    else:
-                        if st.button(T["add_btn"], key=f"add_{s['stationuuid']}", use_container_width=True):
-                            res = add_to_navidrome(s)
-                            if res.get('subsonic-response', {}).get('status') == 'ok': 
-                                st.success(T["success"])
-                                st.rerun() # Forza ricarica per aggiornare il check ✅
-                            else: 
-                                st.error("Error")
+                        st.caption("⚠️ " + ( "Radio già presente in NAVIDROME" if LANG_CODE=="IT" else "Radio already exists in NAVIDROME" ))
+
             
             if st.button("More ➡️", use_container_width=True):
                 st.session_state.offset += 20
@@ -319,14 +363,26 @@ with col2:
     
 st.divider()
 
-col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+col1, col2, col3, col4 = st.columns([1.2, 1.2, 0.8, 0.8])
 
+# Badge Versione (Stile GitHub/Reddit)
 with col1:
-    st.markdown(f":violet-badge[:material/star: {VERSION}]")
+    st.markdown(f"""
+        <div style="display: flex; align-items: center; background-color: #555; border-radius: 4px; overflow: hidden; width: fit-content; font-family: sans-serif; font-size: 12px; font-weight: bold;">
+            <span style="background-color: #8a2be2; color: white; padding: 4px 8px; display: flex; align-items: center;">⭐ Version</span>
+            <span style="background-color: #2e2e2e; color: #fff; padding: 4px 8px;">{VERSION}</span>
+        </div>
+    """, unsafe_allow_html=True)
 
+# Badge Stazioni Totali
 with col2:
     total = get_total_radios()
-    st.markdown(f":blue-badge[:material/radio: {T['total_radios']} {total}]")
+    st.markdown(f"""
+        <div style="display: flex; align-items: center; background-color: #555; border-radius: 4px; overflow: hidden; width: fit-content; font-family: sans-serif; font-size: 12px; font-weight: bold;">
+            <span style="background-color: #007ec6; color: white; padding: 4px 8px; display: flex; align-items: center;">📻 {T['total_radios']}</span>
+            <span style="background-color: #2e2e2e; color: #fff; padding: 4px 8px;">{total}</span>
+        </div>
+    """, unsafe_allow_html=True)
 
 with col3:
     st.markdown("[![GitHub](https://img.shields.io/badge/GitHub-Repo-orange?logo=github)](https://github.com/brunopiras/naviradiomanager)")
