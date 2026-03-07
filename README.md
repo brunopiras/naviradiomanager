@@ -1,6 +1,6 @@
 ---
 
-# 📻 Navidrome Radio Manager (V6.1.9-RC5)
+# 📻 Navidrome Radio Manager (V6.1.9-RC8)
 
 ---
 
@@ -60,14 +60,24 @@ docker-compose up -d --build
 
 ## 🛠️ Tech Stack & Features
 
-* **UI**: Streamlit (Python) - *Look for the Italian Flag sidebar!* 🇮🇹
-* **APIs**: Radio-Browser API & Subsonic API (Navidrome)
-* **Container**: Docker (python:3.14-slim-trixie)
-* **Duplicate Check**: Real-time query (✅ icon if already in Navidrome).
-* **Reliability**: Uses the `all.api` mirror system.
-* **Badge with total radios stored in the db**
----
+* **UI**: Streamlit (Python) - *Featuring the custom "Petrol Blue" theme & Italian Flag sidebar!* 🇮🇹
+* **APIs**: Radio-Browser API & Subsonic API (Navidrome).
+* **Container**: Docker (python:3.14-slim-trixie) - Optimized for `mac-vlan` networks.
+* **🎧 Live Preview**: Integrated HTML5 Audio Player to test streams before adding them.
+* **📊 Quality Visualizer**: Real-time bitrate analysis with color-coded progress bars (HQ/MQ/LQ).
+* **🔥 Popularity Engine**: Dynamic "TOP" badges for high-voted global stations.
+* **✅ Duplicate Check**: Real-time Subsonic query (shows a checkmark if the station is already in your DB).
+* **🔄 Reliability**: Uses the `all.api` mirror system with automatic fallback.
+* **📈 Stats Badge**: Real-time counter showing the total number of radios stored in your Navidrome DB.
 
+
+### 🎨 Quality Indicators
+- 🟢 **High Quality**: >192 kbps (Audiophile choice)
+- 🔵 **Standard Quality**: 128-191 kbps (Solid stream)
+- 🟠 **Low Quality**: <128 kbps (Mobile friendly)
+- 🔥 **Top Voted**: Over 1000 community votes on Radio-Browser.
+
+  
 ## 📝 Note / Notes
 
 * **Safari Users**: ⚠️ Streamlit sometimes has problems with Safari (V6.1.9-RC5 should fix it). If you experience UI glitches, please try **Chrome** or **Firefox**.
