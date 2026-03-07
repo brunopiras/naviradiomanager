@@ -6,9 +6,6 @@ import os
 import time
 from lang import TRANSLATIONS
 
-
-
-# --- STUPISCIMI: CSS PER BANDIERA ITALIANA NELLA SIDEBAR ---
 st.markdown("""
     <style>
         /* Seleziona il contenitore principale della sidebar */
@@ -51,7 +48,7 @@ TOKEN = hashlib.md5((PASSWORD + SALT).encode("utf-8")).hexdigest()
 LANG_CODE = os.getenv("APP_LANG", "IT").upper()
 T = TRANSLATIONS.get(LANG_CODE, TRANSLATIONS["IT"])
 
-VERSION = f"V6.1.8-{LANG_CODE}"
+VERSION = f"V6.1.9.RC5-{LANG_CODE}"
 FLAGS = {"IT": "🇮🇹", "US": "🇺🇸", "GB": "🇬🇧", "FR": "🇫🇷", "DE": "🇩🇪", "ES": "🇪🇸", "CH": "🇨🇭"}
 
 # --- FUNZIONI DI SUPPORTO ---
@@ -71,7 +68,7 @@ def get_all_countries():
 def get_existing_radios():
     """Recupera gli URL delle radio già salvate su Navidrome per evitare duplicati."""
     endpoint = f"{NAVIDROME_URL}/rest/getInternetRadioStations"
-    params = {"u": USERNAME, "t": TOKEN, "s": SALT, "v": "1.16.1", "c": "web-manager", "f": "json"}
+    params = {"u": USERNAME, "t": TOKEN, "s": SALT, "v": VERSION, "c": "NaviRadioManager", "f": "json"}
     try:
         r = requests.get(endpoint, params=params, timeout=10)
         data = r.json()
@@ -106,14 +103,39 @@ def search_radio(name="", country="", offset=0):
 
 def add_to_navidrome(station):
     endpoint = f"{NAVIDROME_URL}/rest/createInternetRadioStation"
-    params = {"u": USERNAME, "t": TOKEN, "s": SALT, "v": "1.16.1", "c": "web-manager", "f": "json",
+    params = {"u": USERNAME, "t": TOKEN, "s": SALT, "v": VERSION, "c": "NaviRadioManager", "f": "json",
               "name": station['name'], "streamUrl": station['url_resolved'], "homepageUrl": station.get('homepage', '')}
     try:
         r = requests.get(endpoint, params=params, timeout=10)
         return r.json()
     except:
         return {"subsonic-response": {"status": "failed"}}
-
+def get_total_radios():
+    """Recupera il numero totale di stazioni radio configurate su Navidrome"""
+    # Usiamo le variabili globali già definite all'inizio del file
+    endpoint = f"{NAVIDROME_URL}/rest/getInternetRadioStations"
+    params = {
+        'u': USERNAME,
+        't': TOKEN,
+        's': SALT,
+        'v': VERSION,
+        'c': 'NaviRadioManager',
+        'f': 'json'
+    }
+    
+    try:
+        response = requests.get(endpoint, params=params, timeout=10)
+        data = response.json()
+        # Navidrome restituisce la lista dentro questo percorso JSON
+        stations = data.get('subsonic-response', {}).get('internetRadioStations', {}).get('internetRadioStation', [])
+        
+        # Gestione caso singola stazione (Subsonic a volte restituisce un dict invece di una lista)
+        if isinstance(stations, dict):
+            return 1
+        return len(stations)
+    except Exception as e:
+        # Se c'è un errore di connessione, restituisce "?" invece di 0 per non confondere
+        return "?"
 def trigger_search():
     st.session_state.stage = 1
     st.session_state.offset = 0
@@ -220,11 +242,21 @@ with col1:
     st.markdown(f":gray-badge[:material/check: Navidrome URL: {NAVIDROME_URL} ]")
 with col2:
     st.markdown(f":gray-badge[:material/check: User: {USERNAME} ]")
+    
 st.divider()
-col1, col2, col3= st.columns([1, 1, 1])
+
+col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+
 with col1:
     st.markdown(f":violet-badge[:material/star: {VERSION}]")
+
 with col2:
-    st.markdown("[![GitHub](https://img.shields.io/badge/GitHub-Repo-orange?logo=github)](https://github.com/brunopiras/naviradiomanager)")
+    total = get_total_radios()
+    st.markdown(f":blue-badge[:material/radio: {T['total_radios']} {total}]")
+
 with col3:
-    st.markdown("[![Reddit](https://img.shields.io/badge/Reddit-Discuss-orange?logo=reddit&logoColor=white)](https://www.reddit.com/r/navidrome/comments/1rjntju/search_and_add_stream_radio_from_webapp/)")
+    st.markdown("[![GitHub](https://img.shields.io/badge/GitHub-Repo-orange?logo=github)](https://github.com/brunopiras/naviradiomanager)")
+
+with col4:
+    st.markdown("[![Reddit](https://img.shields.io/badge/Reddit-Discuss-orange?logo=reddit&logoColor=white)](https://www.reddit.com/r/navidrome/comments/1rmklet/i_built_a_webgui_to_manage_navidrome_radio/)")
+time.sleep(.1)

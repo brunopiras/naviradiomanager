@@ -15,6 +15,7 @@ TRANSLATIONS = {
         "add_btn": "Aggiungi a Navidrome",
         "success": "✅ Radio aggiunta con successo!",
         "duplicate_warn": "⚠️ Radio già presente nel tuo database", # <-- AGGIUNTO
+        "total_radios": "Tot. stazioni:",
     },
     "EN": {
         "title": "📻 Navidrome Radio Manager",
@@ -31,5 +32,6 @@ TRANSLATIONS = {
         "add_btn": "Add to Navidrome",
         "success": "✅ Radio added successfully!",
         "duplicate_warn": "⚠️ Radio already in your database", # <-- AGGIUNTO
+        "total_radios": "Total Radios:",
     }
 }
