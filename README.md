@@ -41,7 +41,7 @@ services:
       - NAVIDROME_PASS=your_password
       - NAVIDROME_SALT=your_salt_here
       - TZ=Europe/Rome #Your Country Time
-    ###Developers can use those to modify on air and test##
+    ###Developers can use to modify on air and test##
     #volumes:
       #- /path/to/radio_web.py:/app/radio_web.py #Optional to developers
       #- /path/to/lang.py:/app/lang.py #Optional to developers
