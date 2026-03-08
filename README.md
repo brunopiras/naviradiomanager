@@ -1,6 +1,6 @@
 ---
 
-# 📻 Navidrome Radio Manager (V6.1.9-RC18) - Update Mar 8 2026
+# 📻 Navidrome Radio Manager (V6.1.9) - Update Mar 8 2026
 
 ---
 
