@@ -1,6 +1,6 @@
 ---
 
-# 📻 Navidrome Radio Manager (V6.1.9-RC11)
+# 📻 Navidrome Radio Manager (V6.1.9-RC18) - Update Mar 8 2026
 
 ---
 
@@ -70,7 +70,9 @@ docker-compose up -d --build
 * **🔄 Reliability**: Uses the `all.api` mirror system with automatic fallback.
 * **📈 Stats Badge**: Real-time counter showing the total number of radios stored in your Navidrome DB.
 * **🔥 Add Button Radio Vote**: Button to vote stations.
-
+* **🇮🇹 Add Flags to each country (Maybe Windows user issue, I'm sorry!!).
+* **🎧 Add JS to stop play only one stream at time.
+  
 ### 🎨 Quality Indicators
 - 🟢 **High Quality**: >192 kbps (Audiophile choice)
 - 🔵 **Standard Quality**: 128-191 kbps (Solid stream)
