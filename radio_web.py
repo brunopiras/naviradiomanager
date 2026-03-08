@@ -5,42 +5,22 @@ import hashlib
 import os
 import time
 from lang import TRANSLATIONS
-
+st.set_page_config(
+    page_title="NaviRadioManager",
+    page_icon="📻",
+    layout="wide", 
+    initial_sidebar_state="auto" 
+)
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-# Carica il file CSS
 local_css("style.css")
-# Inietta il "Regista Audio" JavaScript
-st.components.v1.html(
-    """
-    <script>
-    // Funzione che ferma tutti gli altri audio quando ne parte uno
-    const stopOtherAudio = (event) => {
-        const allAudios = window.parent.document.querySelectorAll('audio');
-        allAudios.forEach(audio => {
-            if (audio !== event.target) {
-                audio.pause();
-                audio.currentTime = 0; // Opzionale: resetta all'inizio
-            }
-        });
-    };
-
-    // Monitoriamo costantemente la pagina per nuovi player audio (Streamlit li crea dinamicamente)
-    const observer = new MutationObserver(() => {
-        const audios = window.parent.document.querySelectorAll('audio');
-        audios.forEach(audio => {
-            audio.removeEventListener('play', stopOtherAudio); // Evita duplicati
-            audio.addEventListener('play', stopOtherAudio);
-        });
-    });
-
-    observer.observe(window.parent.document.body, { childList: true, subtree: true });
-    </script>
-    """,
-    height=0, # Lo rendiamo invisibile
-)
+def load_js(file_path):
+    with open(file_path, 'r') as f:
+        return f.read()
+js_code = load_js("audio_handler.js")
+st.components.v1.html(f"<script>{js_code}</script>", height=0)
 # --- CONFIGURAZIONE (ENV) ---
 NAVIDROME_URL = os.getenv("NAVIDROME_URL", "")
 USERNAME = os.getenv("NAVIDROME_USER", "")
@@ -51,9 +31,17 @@ TOKEN = hashlib.md5((PASSWORD + SALT).encode("utf-8")).hexdigest()
 LANG_CODE = os.getenv("APP_LANG", "IT").upper()
 T = TRANSLATIONS.get(LANG_CODE, TRANSLATIONS["IT"])
 
-VERSION = f"V6.1.9.RC18-{LANG_CODE}"
+VERSION = f"6.1.9-{LANG_CODE}"
 FLAGS = {"IT": "🇮🇹", "US": "🇺🇸", "GB": "🇬🇧", "FR": "🇫🇷", "DE": "🇩🇪", "ES": "🇪🇸", "CH": "🇨🇭"}
-
+# --- FIX URL ---
+def fix_url(url):
+    if not url:
+        return url
+    if url.startswith("http:") and not url.startswith("http://"):
+        return url.replace("http:", "http://", 1)
+    if url.startswith("https:") and not url.startswith("https://"):
+        return url.replace("https:", "https://", 1)
+    return url
 # --- FLAGS ---
 @st.cache_data
 def get_world_countries():
@@ -216,17 +204,9 @@ def rerun():
     st.write("")
 
 # --- INTERFACCIA ---
-st.set_page_config(page_title="NaviRadioManager", page_icon="📻", layout="centered")
 st.markdown("<style>[data-testid='stVerticalBlock'] > div {transition: none !important; opacity: 1 !important;}</style>", unsafe_allow_html=True)
 
 st.title(T["title"])
-
-st.set_page_config(
-    page_title="NaviRadio Manager", 
-    page_icon="📻", # Puoi usare un'emoji o un URL di un'immagine
-    layout="wide"
-)
-
 
 lista_ufficiale = [""] + get_all_countries()
 
@@ -280,7 +260,9 @@ with main_area.container():
             st.write(f"### {T['results']}")
             ###Ciclo FOR per creare le stazioni###
             for s in st.session_state.results:
-                stream_url = s['url_resolved']
+                raw_url = s.get('url_resolved', '')
+                stream_url = fix_url(raw_url)
+
                 is_duplicate = stream_url in existing_urls
                 
                 # 1. Tentativo dal codice ufficiale dell'API
@@ -326,45 +308,18 @@ with main_area.container():
                 titolo_elenco = f"{flag} - {s['name']} {top_icon} [{genere_principale}]{is_dup_tag}"
 
                 with st.expander(titolo_elenco):
-                    # Header interno con Logo grande e Titolo
+                    # 1. HEADER COMPATTO (Logo + Player sulla stessa riga)
+                    # Usiamo proporzioni 1 a 4 per dare spazio al player
                     h_col1, h_col2 = st.columns([1, 6])
                     with h_col1:
                         if icona:
-                            st.image(icona, width=40)
+                            st.image(icona, width=55) # Leggermente più grande per il touch
                         else:
                             st.write(f"### {flag}")
                     with h_col2:
-                        st.subheader(s['name'])
-                        if votes > 1000:
-                            st.markdown(f"<span class='top-voted'>🔥 TOP {votes} VOTI</span>", unsafe_allow_html=True)
-                    
-                    col1, col2 = st.columns([2, 1])
-                    with col1:
-                        # Recuperiamo il bitrate
-                        bitrate = s.get('bitrate', 0)
-                        codec = s.get('codec', 'N/D')
-                        
-                        # Determiniamo colore e etichetta in base alla qualità
-                        if bitrate >= 192:
-                            q_color = "green"
-                            q_label = "High Quality" if LANG_CODE == "EN" else "Alta Qualità"
-                        elif bitrate >= 128:
-                            q_color = "blue"
-                            q_label = "Standard Quality" if LANG_CODE == "EN" else "Qualità Standard"
-                        else:
-                            q_color = "orange"
-                            q_label = "Low Quality" if LANG_CODE == "EN" else "Bassa Qualità"
-
-                        st.write(f"Bitrate: {bitrate} | Codec: {codec}")
-                        
-                        # Inseriamo la barra di progresso (max 320 kbps)
-                        # Usiamo la sintassi colorata per l'etichetta
-                        st.markdown(f":{q_color}[{q_label}]")
-                        st.progress(min(bitrate / 320, 1.0))
-                        
-                    st.divider()
-                    # Header preview con animazione equalizzatore
-                    st.markdown(f"""
+                        # Il player subito qui: l'utente non deve scorrere per ascoltare!
+                        # Header preview con animazione equalizzatore
+                        st.markdown(f"""
                         <div style="display: flex; align-items: center;">
                             <span style="font-weight: bold; margin-right: 10px;">🎧 Quick Preview:</span>
                             <span style="color: #ff4b1f; font-size: 0.8rem; font-weight: bold;">LIVE</span>
@@ -374,22 +329,49 @@ with main_area.container():
                                 <div class="eq-bar"></div>
                             </div>
                         </div>
-                    """, unsafe_allow_html=True)
+                        """, unsafe_allow_html=True)
+                        try:
+                            if stream_url:
+                                st.audio(stream_url, format="audio/mp3")
+                            else:
+                                st.warning("URL not available")
+                        except Exception as e:
+                            st.error(f"Unable to load audio: {stream_url}")
 
-                    st.audio(stream_url, format="audio/mp3")
+                    # 2. SEZIONE DETTAGLI (Bitrate e Qualità)
+                    # Usiamo colonne 50/50 per tenere tutto su una riga
+                    d_col1, d_col2 = st.columns(2)
+                    
+                    bitrate = s.get('bitrate', 0)
+                    codec = s.get('codec', 'N/D')
+                    
+                    # --- La tua logica della qualità (Mantenuta!) ---
+                    if bitrate >= 192:
+                        q_color, q_label = "green", ("High Quality" if LANG_CODE == "EN" else "Alta Qualità")
+                    elif bitrate >= 128:
+                        q_color, q_label = "blue", ("Standard Quality" if LANG_CODE == "EN" else "Qualità Standard")
+                    else:
+                        q_color, q_label = "orange", ("Low Quality" if LANG_CODE == "EN" else "Bassa Qualità")
+
+                    with d_col1:
+                        st.markdown(f"**{codec}** @ {bitrate} kbps")
+                    with d_col2:
+                        st.markdown(f":{q_color}[{q_label}]")
+                    
+                    # Barra progresso più sottile
+                    st.progress(min(bitrate / 320, 1.0))
+
+                    # 3. FOOTER (Voti e Homepage)
+                    f_col1, f_col2 = st.columns(2)
+                    with f_col1:
+                        st.caption(f"⭐ {votes} votes")
+                    with f_col2:
+                        if hp:
+                            st.caption(f"🔗 [Web Site]({hp})")
+                        
                     # --- AZIONI (Voto e Aggiunta) ---
                     st.divider()
                     
-                    # CSS per forzare l'altezza del bottone uguale a quella dell'info box
-                    st.markdown("""
-                        <style>
-                            div.stButton > button {
-                                height: 52px !important;
-                                margin-top: 0px !important;
-                            }
-                        </style>
-                    """, unsafe_allow_html=True)
-
                     col_v, col_a = st.columns([1, 1])
                     
                     with col_v:
@@ -481,32 +463,27 @@ with col1:
         st.markdown(f":gray-badge[:material/check: Navidrome URL: {NAVIDROME_URL} 🔴 Offline]")
 with col2:
     st.markdown(f":gray-badge[:material/check: User: {USERNAME} ]")
-    
-st.divider()
-
-# Proporzioni colonne per evitare che vadano a capo
-col1, col2, col3, col4 = st.columns([1.2, 1.2, 0.8, 0.8])
-
-with col1:
-    st.markdown(f"""
-        <div class="custom-badge">
-            <span style="background-color: #8a2be2; color: white; padding: 4px 8px;">⭐ Version</span>
-            <span style="background-color: #2e2e2e; color: #fff; padding: 4px 8px;">{VERSION}</span>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    total = get_total_radios()
-    st.markdown(f"""
-        <div class="custom-badge">
-            <span style="background-color: #007ec6; color: white; padding: 4px 8px;">📻 {T.get('total_radios', 'Radios')}</span>
-            <span style="background-color: #2e2e2e; color: #fff; padding: 4px 8px;">{total}</span>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown("[![GitHub](https://img.shields.io/badge/GitHub-Repo-orange?logo=github)](https://github.com/brunopiras/naviradiomanager)")
-
-with col4:
-    st.markdown("[![Reddit](https://img.shields.io/badge/Reddit-Discuss-orange?logo=reddit&logoColor=white)](https://www.reddit.com/r/navidrome/comments/1rmklet/i_built_a_webgui_to_manage_navidrome_radio/)")
 time.sleep(.1)
+with st.sidebar:  
+    # Creiamo un contenitore HTML flessibile per i badge
+    # Questo assicura che su mobile restino ordinati e centrati
+    v_safe = str(VERSION).replace("-", "--")
+    footer_html = f"""
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 10px;">
+        <a href="https://github.com/brunopiras/naviradiomanager" target="_blank">
+            <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="Github">
+        </a>
+        <a href="https://reddit.com/r/navidrome/comments/1rmklet/i_built_a_webgui_to_manage_navidrome_radio/" target="_blank">
+            <img src="https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white" alt="Reddit">
+        </a>
+    </div>
+    <div style="text-align: center; margin-top: 5px;">
+        <img src="https://img.shields.io/badge/Ver.-{v_safe}-blue?style=flat-square" alt="Ver.">
+        <img src="https://img.shields.io/badge/Navi Stat.-{get_total_radios()}-blue?style=flat-square" alt="Navi Stat.">
+    </div>
+    """
+with st.sidebar:
+    st.markdown(footer_html, unsafe_allow_html=True)
+    time.sleep(.1)
+st.divider()
+st.caption(f"© 2026 NaviRadioManager")
