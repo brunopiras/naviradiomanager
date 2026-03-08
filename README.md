@@ -35,13 +35,18 @@ services:
     ports:
       - "8501:8501"
     environment:
-      - APP_LANG=IT                  # IT or EN
+      - APP_LANG=EN   # IT or EN
       - NAVIDROME_URL=http://YOUR_IP:4533
       - NAVIDROME_USER=your_user
       - NAVIDROME_PASS=your_password
       - NAVIDROME_SALT=your_salt_here
-    restart: unless-stopped
-
+      - TZ=Europe/Rome #Your Country Time
+    ###Developers can use those to modify on air and test##
+    #volumes:
+      #- /path/to/radio_web.py:/app/radio_web.py #Optional to developers
+      #- /path/to/lang.py:/app/lang.py #Optional to developers
+      #- /path/to/.streamlit/config.toml:/app/.streamlit/config.toml
+      #- /path/to/style.css:/app/style.css
 ```
 
 ### Opzione B: Build Locale (Sviluppatori / Developers)
