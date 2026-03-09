@@ -1,19 +1,11 @@
-/* Seleziona il contenitore principale della sidebar */
 [data-testid="stSidebar"]>div:first-child {
   background: linear-gradient(to bottom,
       #008c45 0%, #008c45 33.33%,
-      /* VERDE UFFICIALE 1/3 */
       #f4f5f0 33.33%, #f4f5f0 66.66%,
-      /* BIANCO UFFICIALE 1/3 */
-      #cd212a 66.66%, #cd212a 100%
-      /* ROSSO UFFICIALE 1/3 */
-    ) !important;
+      #cd212a 66.66%, #cd212a 100%) !important;
   background-attachment: fixed;
-  /* Mantiene le strisce ferme allo scorrimento */
 }
 
-/* --- OTTIMIZZAZIONE TESTO SIDEBAR --- */
-/* Rende il testo nella sidebar scuro e leggibile su verde/bianco */
 [data-testid="stSidebar"] .stMarkdown,
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] .stSelectbox label,
@@ -29,22 +21,19 @@
   border-radius: 4px;
 }
 
-/* Rende le icone delle radio smussate e aggiunge un'ombra leggera */
 img {
   border-radius: 8px !important;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  /* Un sottile bordo per farle staccare dallo sfondo petrolio */
 }
 
-/* Effetto zoom al passaggio del mouse */
 img:hover {
   transform: scale(1.2);
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.5);
 }
 
-/* Mini Player Trasparente */
+
 audio {
   width: 100%;
   height: 40px;
@@ -81,7 +70,7 @@ audio:hover {
   }
 }
 
-/* Animazione dell'equalizzatore */
+
 .eq-container {
   display: flex;
   align-items: flex-end;
@@ -95,7 +84,6 @@ audio:hover {
 .eq-bar {
   width: 3px;
   background-color: #ff4b1f;
-  /* Colore arancio come il tuo tema TOP */
   animation: eq-stretch 0.5s ease-in-out infinite;
 }
 
@@ -123,7 +111,6 @@ audio:hover {
   }
 }
 
-/* Effetto Hover per i badge personalizzati con angoli più arrotondati */
 .custom-badge {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: default;
@@ -131,7 +118,6 @@ audio:hover {
   align-items: center;
   background-color: #555;
   border-radius: 12px;
-  /* Aumentato da 4px a 12px per un look più morbido */
   overflow: hidden;
   width: max-content;
   font-family: sans-serif;
@@ -143,17 +129,28 @@ audio:hover {
 .custom-badge:hover {
   transform: scale(1.1);
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
-  /* Ombra leggermente più profonda */
   z-index: 10;
 }
 
-/* --- BOTTONI ALTI COME INFO --- */
 div.stButton>button {
   height: 52px !important;
   margin-top: 0px !important;
 }
 
-/* Se lo schermo è meno di 600px, aggiustiamo i margini */
+.status-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px !important;
+  background-color: #f0f2f6;
+  color: #31333F;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: 1px solid #d1d5db;
+  box-sizing: border-box;
+}
+
+
 @media (max-width: 600px) {
   .main .block-container {
     padding-left: 1rem;
@@ -161,7 +158,6 @@ div.stButton>button {
     padding-top: 1rem;
   }
 
-  /* Rendi i pulsanti della sidebar più grandi per il touch */
   .stButton button {
     width: 100%;
     height: 3rem;
