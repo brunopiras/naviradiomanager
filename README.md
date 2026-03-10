@@ -1,21 +1,18 @@
+# 📻 Navidrome Radio Manager (V6.2) - Update Mar 10 2026
 
 ---
 
-# 📻 Navidrome Radio Manager (V6.2.b7) - Update Mar 9 2026
-
----
-
-#### This tool uses the APIs of [https://api.radio-browser.info](https://api.radio-browser.info) to search for radio stations. (Thanks! ✨)
+#### This tool uses the APIs of [https://api.radio-browser.info ](https://api.radio-browser.info ) to search for radio stations. (Thanks! ✨)
 
 ---
 
 ## 🇮🇹 Descrizione (Italiano)
 
-**Navidrome Radio Manager** è una web-app leggera basata su Streamlit per gestire le stazioni radio del tuo server **Navidrome**. Cerca tra migliaia di stazioni globali e gestisci la tua libreria con un clic. Grazie all'integrazione bidirezionale con le API Subsonic, l'app riconosce le radio già presenti e ti permette di aggiungerle o rimuoverle istantaneamente.
+**Navidrome Radio Manager** è una web-app leggera basata su Streamlit per gestire le stazioni radio del tuo server **Navidrome**. Cerca tra migliaia di stazioni globali e gestisci la tua libreria con un clic. Grazie all'integrazione bidirezionale con le API Subsonic, l'app riconosce le radio già presenti e ti permette di aggiungerle, modificarle o rimuoverle istantaneamente tramite un'interfaccia web intuitiva.
 
 ## 🇬🇧 Description (English)
 
-**Navidrome Radio Manager** is a lightweight Streamlit-based web app to manage your **Navidrome** radio stations. Browse thousands of global stations and manage your library with one click. Thanks to bidirectional Subsonic API integration, the app recognizes existing stations and allows you to add or remove them instantly.
+**Navidrome Radio Manager** is a lightweight Streamlit-based web app to manage your **Navidrome** radio stations. Browse thousands of global stations and manage your library with one click. Thanks to bidirectional Subsonic API integration, the app recognizes existing stations and allows you to add, edit, or remove them instantly through an intuitive web interface.
 
 ---
 
@@ -48,7 +45,6 @@ services:
       #- /path/to/lang.py:/app/lang.py #Optional to developers
       #- /path/to/.streamlit/config.toml:/app/.streamlit/config.toml
       #- /path/to/style.css:/app/style.css
-
 ```
 
 ### Opzione B: Build Locale (Sviluppatori / Developers)
@@ -57,10 +53,9 @@ services:
 🇬🇧 Clone the repo and build the image locally. Best for customization.
 
 ```bash
-git clone https://github.com/brunopiras/naviradiomanager.git
+git clone https://github.com/brunopiras/naviradiomanager.git 
 cd naviradiomanager
 docker-compose up -d --build
-
 ```
 
 ---
@@ -81,6 +76,16 @@ docker-compose up -d --build
 * **🌍 International Flags**: Visual country flags for each station (Note: Windows might have emoji rendering issues).
 * **🔇 Smart Playback**: Custom JS logic to ensure only one stream plays at a time.
 
+### 🆕 New in V6.2 - Radio Management Dashboard
+
+* **📻 My Radios Dashboard**: Dedicated section to view all your Navidrome radio stations in a clean grid layout with favicons.
+* **🔍 Station Details**: Expandable detail view for each radio showing ID, name, homepage, stream URL, and vote count.
+* **✏️ Edit Stations**: Modify radio name, stream URL, and homepage URL directly via `updateInternetRadioStation` Subsonic API (requires admin privileges).
+* **📋 Copy URLs**: One-click copy buttons for both stream URL and homepage URL to clipboard.
+* **🧪 Stream Test**: Built-in connectivity test to verify if a stream URL is reachable before saving changes.
+* **📋 Quick Navigation**: "Back to List" button in sidebar and action section for fast navigation between detail view and radio grid.
+* **🎨 Unified URL Display**: Stream and homepage URLs now displayed in consistent code-block format for better readability.
+
 ### 🎨 Quality Indicators
 
 * 🟢 **High Quality**: >192 kbps (Audiophile choice)
@@ -92,11 +97,10 @@ docker-compose up -d --build
 
 * **Safari Users**: ⚠️ Streamlit sometimes has problems with Safari (V6.1.9-RC5 should fix it). If you experience UI glitches, please try **Chrome** or **Firefox**.
 * **Removal Feature**: To remove a station, the app matches the exact URL saved in Navidrome. If the URL has been modified manually in Navidrome, the removal button might not find the ID.
+* **Edit Feature**: Editing stations requires Navidrome admin privileges. The edit operation preserves the station ID and all associated metadata (starred status, etc.).
 
 ---
 
-###### Special thanks to @WB2024 ([https://github.com/WB2024/Add-Navidrome-Radios](https://github.com/WB2024/Add-Navidrome-Radios))
+###### Special thanks to @WB2024 ([https://github.com/WB2024/Add-Navidrome-Radios ](https://github.com/WB2024/Add-Navidrome-Radios ))
 
 ###### This idea came to me while using @WB2024's tool. While his tool interacts directly with the database via CLI, Navidrome Radio Manager uses the **Subsonic API** for a simple, fast, and intuitive web interface!
-
----a
