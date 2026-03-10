@@ -163,3 +163,183 @@ div.stButton>button {
     height: 3rem;
   }
 }
+
+/* ============================================
+   BOTTONI SIDEBAR - VISIBILITÀ MIGLIORATA
+   ============================================ */
+
+/* Bottoni primari (type="primary") nella sidebar */
+[data-testid="stSidebar"] button[kind="primary"] {
+  background-color: #008c45 !important;
+  /* Verde italiano */
+  color: white !important;
+  border: 2px solid white !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-testid="stSidebar"] button[kind="primary"]:hover {
+  background-color: #006b35 !important;
+  /* Verde più scuro */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Bottoni secondari (type="secondary") nella sidebar */
+[data-testid="stSidebar"] button[kind="secondary"] {
+  background-color: #cd212a !important;
+  /* Rosso italiano */
+  color: white !important;
+  border: 2px solid white !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-testid="stSidebar"] button[kind="secondary"]:hover {
+  background-color: #a81b22 !important;
+  /* Rosso più scuro */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Stato attivo/click */
+[data-testid="stSidebar"] button:active {
+  transform: translateY(1px) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Bottoni disabilitati nella sidebar */
+[data-testid="stSidebar"] button:disabled {
+  background-color: #888 !important;
+  color: #ccc !important;
+  border-color: #999 !important;
+  opacity: 0.7 !important;
+}
+
+/* Forza colore testo in tutti i bottoni sidebar */
+[data-testid="stSidebar"] button p,
+[data-testid="stSidebar"] button span,
+[data-testid="stSidebar"] button div {
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================
+   HEADER SIDEBAR E DIVISORI
+   ============================================ */
+
+/* Header "Gestione Radio" più visibile */
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3,
+[data-testid="stSidebar"] .stSubheader {
+  color: #1a1a1a !important;
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  margin: 10px 0 !important;
+  text-align: center !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Divider visibile */
+[data-testid="stSidebar"] hr {
+  border-color: rgba(0, 0, 0, 0.3) !important;
+  border-width: 2px !important;
+  margin: 15px 0 !important;
+}
+
+/* ============================================
+   MIGLIORAMENTI WIDGET INPUT (già presenti ma rafforzati)
+   ============================================ */
+
+/* Selectbox e TextInput con bordo più marcato */
+[data-testid="stSidebar"] div[data-baseweb="select"]>div,
+[data-testid="stSidebar"] div[data-baseweb="base-input"]>input {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  color: #1a1a1a !important;
+  border: 2px solid #008c45 !important;
+  /* Bordo verde */
+  border-radius: 6px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Focus state */
+[data-testid="stSidebar"] div[data-baseweb="select"]>div:focus-within,
+[data-testid="stSidebar"] div[data-baseweb="base-input"]>input:focus {
+  border-color: #cd212a !important;
+  /* Rosso al focus */
+  box-shadow: 0 0 0 3px rgba(205, 33, 42, 0.2) !important;
+}
+
+/* ============================================
+   FORM EDIT RADIO - VISIBILITÀ MIGLIORATA
+   ============================================ */
+
+/* Sfondo del form container */
+[data-testid="stForm"] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  padding: 20px !important;
+  border-radius: 10px !important;
+  border: 2px solid #008c45 !important;
+}
+
+/* Input fields nel form */
+[data-testid="stForm"] input[type="text"] {
+  background-color: #2d2d2d !important;
+  /* Sfondo scuro */
+  color: #ffffff !important;
+  /* Testo bianco */
+  border: 2px solid #555 !important;
+  border-radius: 6px !important;
+  padding: 10px !important;
+  font-weight: 500 !important;
+}
+
+/* Placeholder nei form */
+[data-testid="stForm"] input[type="text"]::placeholder {
+  color: #aaa !important;
+  opacity: 1 !important;
+}
+
+/* Focus state per input nel form */
+[data-testid="stForm"] input[type="text"]:focus {
+  background-color: #1a1a1a !important;
+  /* Più scuro al focus */
+  border-color: #ff4b1f !important;
+  /* Arancione/rosso al focus */
+  box-shadow: 0 0 0 3px rgba(255, 75, 31, 0.3) !important;
+  outline: none !important;
+}
+
+/* Label dei campi nel form */
+[data-testid="stForm"] label {
+  color: #1a1a1a !important;
+  /* Testo scuro per contrasto con sfondo chiaro */
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  margin-bottom: 5px !important;
+}
+
+/* Se il form è in una zona con sfondo scuro, inverti i colori delle label */
+[data-testid="stVerticalBlock"]:has([data-testid="stForm"]) label {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Bottoni nel form */
+[data-testid="stForm"] button[kind="primary"] {
+  background: linear-gradient(135deg, #008c45 0%, #006b35 100%) !important;
+  color: white !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+[data-testid="stForm"] button[kind="secondary"] {
+  background: linear-gradient(135deg, #666 0%, #444 100%) !important;
+  color: white !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
