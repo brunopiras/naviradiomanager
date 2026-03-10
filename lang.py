@@ -59,7 +59,8 @@ TRANSLATIONS = {
         "status": "Stato",
         "links": "Link e URL",
         "no_preview": "Anteprima non disponibile",
-        "confirm_delete": "Clicca di nuovo per confermare l'eliminazione"
+        "confirm_delete": "Clicca di nuovo per confermare l'eliminazione",
+        "click_again_confirm": "Clicca di nuovo per confermare",
     },
     "EN": {
         "title": "📻 Navidrome Radio Manager",
@@ -121,5 +122,6 @@ TRANSLATIONS = {
         "links": "Links & URLs",
         "no_preview": "Preview not available",
         "confirm_delete": "Click again to confirm deletion",
+        "click_again_confirm": "Click again to confirm",
     }
 }

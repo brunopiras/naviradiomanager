@@ -252,6 +252,22 @@ def cancel_edit():
     st.session_state.edit_mode = False
     st.session_state.editing_radio = None
 
+def scroll_to_element(element_id):
+    """Usa JavaScript per scrollare a un elemento specifico dopo il reload"""
+    js = f"""
+    <script>
+    window.addEventListener('load', function() {{
+        setTimeout(function() {{
+            var element = document.getElementById('{element_id}');
+            if (element) {{
+                element.scrollIntoView({{behavior: 'smooth', block: 'center'}});
+            }}
+        }}, 100);
+    }});
+    </script>
+    """
+    st.components.v1.html(js, height=0)
+
 def vote_for_station(uuid):
     try:
         url = f"https://all.api.radio-browser.info/json/vote/{uuid}"
@@ -601,6 +617,11 @@ with main_area.container():
                 # Visualizzazione normale: 4 bottoni in griglia 2x2
                 act_col1, act_col2 = st.columns(2)
                 
+                # Chiave univoca per questa radio nella sessione
+                confirm_key = f"confirm_delete_{radio.get('id')}"
+                if confirm_key not in st.session_state:
+                    st.session_state[confirm_key] = False
+                
                 with act_col1:
                     if st.button("🧪 " + (T.get("test_stream", "Test Stream") if LANG_CODE == "IT" else "Test Stream"), 
                                use_container_width=True):
@@ -613,11 +634,10 @@ with main_area.container():
                         except Exception as e:
                             st.error(f"❌ Errore: {str(e)}")
                     
-                    # NUOVO: Bottone Torna alla Lista (prima posizione, colore neutro)
-                    back_list_color = "secondary"  # o "primary" se vuoi più visibilità
+                    # NUOVO: Bottone Torna alla Lista
                     if st.button("📋 " + (T.get("back_to_list", "Torna alla Lista") if LANG_CODE == "IT" else "Back to List"), 
                                use_container_width=True, 
-                               type=back_list_color):
+                               type="secondary"):
                         back_to_radio_list()
                         st.rerun()
                 
@@ -628,30 +648,55 @@ with main_area.container():
                         enter_edit_mode(radio)
                         st.rerun()
                     
+                    # ELIMINA con conferma persistente + scroll preservation
                     del_label = "🗑️ " + (T.get("delete", "Elimina") if LANG_CODE == "IT" else "Delete")
-                    if st.button(del_label, use_container_width=True, type="primary"):
-                        # Conferma inline invece di colonne separate
-                        confirm_key = f"confirm_del_{radio.get('id')}"
-                        if confirm_key not in st.session_state:
-                            st.session_state[confirm_key] = False
-                        
-                        if not st.session_state[confirm_key]:
+                    
+                    # Anchor HTML per scroll preservation
+                    radio_anchor = f"radio_{radio.get('id')}"
+                    st.markdown(f'<div id="{radio_anchor}"></div>', unsafe_allow_html=True)
+                    
+                    if not st.session_state[confirm_key]:
+                        # Primo stato: bottone normale
+                        if st.button(del_label, use_container_width=True, type="primary", key=f"del_btn_{radio.get('id')}"):
                             st.session_state[confirm_key] = True
-                            st.warning("⚠️ " + (T.get("confirm_delete", "Clicca di nuovo per confermare l'eliminazione") if LANG_CODE == "IT" else "Click again to confirm deletion"))
+                            st.session_state[f"scroll_to_{radio.get('id')}"] = True
                             st.rerun()
-                        else:
-                            res = delete_radio(radio.get('id'))
-                            if res.get('subsonic-response', {}).get('status') == 'ok':
-                                st.success("🗑️ " + (T.get("msg_deleted", "Eliminata!") if LANG_CODE == "IT" else "Deleted!"))
-                                # Reset conferma per future eliminazioni
+                    else:
+                        # Secondo stato: mostra warning e bottoni conferma/annulla
+                        st.warning("⚠️ " + (T.get("click_again_confirm", "Clicca di nuovo per confermare") if LANG_CODE == "IT" else "Click again to confirm"))
+                        
+                        col_confirm, col_cancel = st.columns(2)
+                        with col_confirm:
+                            if st.button("✅ " + (T.get("confirm", "Conferma") if LANG_CODE == "IT" else "Confirm"), 
+                                       use_container_width=True, 
+                                       type="primary",
+                                       key=f"del_confirm_{radio.get('id')}"):
+                                # Esegui eliminazione
+                                res = delete_radio(radio.get('id'))
+                                # Reset stato
                                 st.session_state[confirm_key] = False
-                                time.sleep(1)
-                                back_to_radio_list()
+                                st.session_state.pop(f"scroll_to_{radio.get('id')}", None)
+                                
+                                if res.get('subsonic-response', {}).get('status') == 'ok':
+                                    st.success("🗑️ " + (T.get("msg_deleted", "Eliminata!") if LANG_CODE == "IT" else "Deleted!"))
+                                    time.sleep(1)
+                                    back_to_radio_list()
+                                    st.rerun()
+                                else:
+                                    err = res.get('subsonic-response', {}).get('error', {}).get('message', 'Errore sconosciuto')
+                                    st.error(f"❌ {err}")
+                        
+                        with col_cancel:
+                            if st.button("❌ " + (T.get("cancel", "Annulla") if LANG_CODE == "IT" else "Cancel"),
+                                       use_container_width=True,
+                                       key=f"del_cancel_{radio.get('id')}"):
+                                st.session_state[confirm_key] = False
+                                st.session_state.pop(f"scroll_to_{radio.get('id')}", None)
                                 st.rerun()
-                            else:
-                                err = res.get('subsonic-response', {}).get('error', {}).get('message', 'Errore sconosciuto')
-                                st.error(f"❌ {err}")
-                                st.session_state[confirm_key] = False
+                        
+                        # Esegui scroll se necessario (dopo il rerun)
+                        if st.session_state.get(f"scroll_to_{radio.get('id')}", False):
+                            scroll_to_element(radio_anchor)
             # ========== FINE SEZIONE AZIONI ==========
         
         # --- Vista Lista di tutte le radio ---
