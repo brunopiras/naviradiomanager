@@ -1,4 +1,4 @@
-# 📻 Navidrome Radio Manager (V6.2) - Update Mar 10 2026
+# 📻 Navidrome Radio Manager (V6.2.4) - Update Mar 11 2026
 
 ---
 
@@ -85,6 +85,9 @@ docker-compose up -d --build
 * **🧪 Stream Test**: Built-in connectivity test to verify if a stream URL is reachable before saving changes.
 * **📋 Quick Navigation**: "Back to List" button in sidebar and action section for fast navigation between detail view and radio grid.
 * **🎨 Unified URL Display**: Stream and homepage URLs now displayed in consistent code-block format for better readability.
+
+### 🆕 New in V6.2.4 - Radio Management Dashboard
+* ** Fix Some minor issues
 
 ### 🎨 Quality Indicators
 
