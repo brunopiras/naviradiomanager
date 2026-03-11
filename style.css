@@ -343,3 +343,27 @@ div.stButton>button {
   border: none !important;
   font-weight: 600 !important;
 }
+
+/* Fix Safari rendering */
+[data-testid="stVerticalBlock"] {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Forza repaint */
+[data-testid="stVerticalBlock"]>div {
+  will-change: transform;
+}
+
+/* Riduci spazio sotto il titolo "Anteprima" */
+[data-testid="stVerticalBlock"] h3 {
+  margin-bottom: 0.5rem !important;
+  margin-top: 1rem !important;
+}
+
+/* Uniforma altezza bottoni */
+div.stButton>button {
+  height: 52px !important;
+  min-height: 52px !important;
+  max-height: 52px !important;
+}
